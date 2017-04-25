@@ -1,0 +1,52 @@
+<nav id="my_nav" class="nav-position" role="navigation">
+    <script>
+        function openMenu() {
+            var nav_menu = document.getElementById('nav_menu');
+            var button_menu = document.getElementById('button_menu');
+
+            button_menu.classList.add('none');
+            button_menu.classList.remove('block');
+            nav_menu.classList.remove('none');
+            nav_menu.classList.add('block');
+        }
+
+        function openCRUD(opc) {
+            var nav_crud = document.getElementById('nav_CRUD');
+            var nav_menu = document.getElementById('nav_menu');
+
+            if (opc) {
+                nav_menu.classList.add('none');
+                nav_menu.classList.remove('block');
+                nav_crud.classList.add('block');
+                nav_crud.classList.remove('none');
+            } else {
+                nav_crud.classList.add('none');
+                nav_crud.classList.remove('block');
+                nav_menu.classList.add('block');
+                nav_menu.classList.remove('none');
+            }
+        }
+    </script>
+
+    <button id="button_menu" class="nav-menu" onclick="openMenu()">
+        Open Menu
+    </button>
+    <h4 id="nav_menu" class="none">
+        <a class="btn-nav" href="/">
+            Home
+        </a>
+        <a class="btn-nav" onclick="openCRUD(1)">
+            CRUD
+        </a>
+    </h4>
+    <h4 id="nav_CRUD" class="dl-submenu none">
+        <a class="btn-nav" onclick="openCRUD(0)">
+            < </a>
+                <a class="btn-nav" href="/curso">
+            Curso
+        </a>
+                <a class="btn-nav" href="/professor">
+            Professor
+        </a>
+    </h4>
+</nav>

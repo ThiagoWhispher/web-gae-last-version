@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div id="editar_disciplina" class="container-ext center-page">
+
+    <h1>EDITAR DISCIPLINA</h1>
+
+    <form action="/updatedisciplina?key={{disciplina.key.urlsafe()}}" method="post">
+        <div><label>Nome:</label></div>
+        <div><input type="text" name="nome" value="{{disciplina.nome}}"/></div>
+        <div><label>Periodo:</label></div>
+        <div><input type="number" name="periodo" min="1" value="{{disciplina.periodo}}"/></div>
+        <div><label>Curso:</label></div>
+        <div>
+            <select name="curso">
+              {% for curso in cursos %}
+                    <option value="{{curso.key.id()}}">{{curso.nome}}</option>
+              {% endfor %}     
+            </select>
+        </div>
+        <br>
+        <button id="campo_editar_deletar" type="submit">Alterar</button>
+    </form>
+</div>
+
+{% endblock %}
