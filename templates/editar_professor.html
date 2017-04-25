@@ -1,21 +1,17 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
 
-<div id="editar_professor" class="container-ext center-page">
-
-    <h1>EDITAR PROFESSOR</h1>
-
+{% block content %}
     <form action="/updateprofessor?key={{professor.key.urlsafe()}}" enctype="multipart/form-data" method="post">
         <div><label>Nome:</label></div>
-        <div><input type="text" name="nome" value="{{professor.nome}}" /></div>
+        <div><input type="text" name="nome" value="{{professor.nome}}"/></div>
         <div><label>Área:</label></div>
-        <div><input type="text" name="area" value="{{professor.area}}" /></div>
+        <div><input type="text" name="area" value="{{professor.area}}"/></div>
         <div><label>Perfil:</label></div>
-        <div><input type="text" name="perfil" value="{{professor.perfil}}" /></div>
+        <div><input type="text" name="perfil" value="{{professor.perfil}}"/></div>
         <div><label>email:</label></div>
-        <div><input type="text" name="email" value="{{professor.email}}" /></div>
-
-        <button id="campo_editar_deletar" type="submit">Alterar</button>
+        <div><input type="text" name="email" value="{{professor.email}}"/></div>
+        
+        <button type="submit">Alterar</button>
     </form>
-</div>
 
 {% endblock %}

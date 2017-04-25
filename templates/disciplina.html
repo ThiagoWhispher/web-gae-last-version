@@ -1,86 +1,37 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
 
-<div id="disciplina" class="container-ext center-page">
+{% block content %}
 
-    <h2 class="padding-top-10">DISCIPLINA</h2>
+<h1>Disciplina</h1>
 
-    <script>
-        function add_disciplina(opc){
-            tabela = document.getElementById('tabela');
-            form = document.getElementById('form_disc');
+<form  action="/disciplina?key={{key_curso.urlsafe()}}" enctype="multipart/form-data" method="post">
+    <div><label>Nome:</label></div>
+    <div><input type="text" name="nome"/></div>
+    <div><label>Periodo:</label></div>
+    <div><input type="number" name="periodo"/></div>
+    <br>
+    <div><input type="submit" value="Adicionar"></div>
+</form>
 
-            if(opc){
-                tabela.classList.remove('block');
-                tabela.classList.add('none');
-                form.classList.add('block');
-                form.classList.remove('none');
-            }else{
-                form.classList.remove('block');
-                form.classList.add('none');
-                tabela.classList.add('block');
-                tabela.classList.remove('none');
-            }
-        }
-    </script>
+<h1>Disciplinas</h1>
+<table>
+    <tr>
+        <th>Nome</th>
+        <th>Periodo</th>
+        <th>Curso</th>
+        <th>Editar</th>
+        <th>deletar</th>
+    </tr>
+    {% for disciplina in disciplinas %}
+        <tr>
+            <td>{{disciplina.nome}}</td>
+            <td>{{disciplina.periodo}}</td>
+            <td>{{key_curso.get().nome}}</td>
+            <td><a href="/updatedisciplina?key={{disciplina.key.urlsafe()}}"><button type="button">editar</button></a></td>
+            <td><a href="/deletedisciplina?key={{disciplina.key.urlsafe()}}"><button type="button">deletar</button></a></td>
+        </tr>
+    {% endfor %}
+</table>
 
-    <div id="form_disc" class="none">
-        <button class="btn-home" onclick="add_disciplina(0)">
-            <i class="fa fa-arrow-left"></i>
-        </button>
-        <form action="/disciplina" enctype="multipart/form-data" method="post">
-            <div><label>Nome:</label></div>
-            <div><input type="text" name="nome" /></div>
-            <div><label>Periodo:</label></div>
-            <div><input type="number" name="periodo" /></div>
-            <div>            
-                <select name="curso">
-                  {% for cur in cursos %}
-                        {% if cur.nome == curso %}
-                        <option value="{{cur.key.id()}}">{{cur.nome}}</option>
-                        {% endif %}
-                  {% endfor %}     
-                </select>
-            </div>
-            <br>
-            <div class="padding-top-10"><input type="submit" value="Adicionar"></div>
-        </form>
-    </div>
 
-     <div id="tabela" class="block">
-        <div class="padding-bot-10">
-            <a class="btn-home" href="/curso">
-                <i class="fa fa-arrow-left"></i>
-             </a>
-            <a class="btn-home" href="/">
-                <i class="fa fa-home"></i>
-            </a>
-            <button class="btn-home" onclick="add_disciplina(1)">
-                <i class="fa fa-plus"></i> 
-            </button>
-        </div>
-        <div class="w3-responsive">
-            <table class="w3-table-all">
-                <tr>
-                    <th>Nome</th>
-                    <th>Periodo</th>
-                    <th>Curso</th>
-                    <th></th>
-                </tr>
-                {% for disciplina in disciplinas %}
-                    {% if Curso.get_by_id(disciplina.curso).nome == curso %}
-                    <tr>
-                        <td>{{disciplina.nome}}</td>
-                        <td>{{disciplina.periodo}}</td>
-                        <td>{{Curso.get_by_id(disciplina.curso).nome}}</td>
-                        <td id="campo_editar_deletar">
-                            <a href="/updatedisciplina?key={{disciplina.key.urlsafe()}}"><i class="fa fa-pencil-square-o fa-3x" aria-hidden="true"></i></a>
-                            <a href="/delete?id={{disciplina.key.urlsafe()}};page=disciplina"><i class="fa fa-trash-o fa-3x" aria-hidden="true"></i></a>
-                        </td>
-                    </tr>
-                    {% endif %}
-                {% endfor %}
-            </table>
-        </div>
-    </div>
-</div>
 {% endblock %}

@@ -1,104 +1,48 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
 
-<div id="professor" class="container-ext center-page">
+{% block content %}
 
-    <h2 class="padding-top-10">PROFESSOR</h2>
+<h1>Professor</h1>
 
-     <script>
-        function add_professor(opc){
-            tabela = document.getElementById('tabela');
-            form = document.getElementById('form_professor');
+<form  action="/professor" enctype="multipart/form-data" method="post">
+    <div><label>Nome:</label></div>
+    <div><input type="text" name="nome"/></div>
+    <div><label>Área:</label></div>
+    <div><input type="text" name="area"/></div>
+    <div><label>Perfil:</label></div>
+    <div><input type="text" name="perfil"/></div>
+    <div><label>email:</label></div>
+    <div><input type="text" name="email"/></div>
+    <div><label>Foto:</label></div>
+    <div><input type="file" name="img" required="true" /></div>
+    <br>
+    <div><input type="submit" value="Adicionar"></div>
+</form>
 
-            if(opc){
-                tabela.classList.remove('block');
-                tabela.classList.add('none');
-                form.classList.add('block');
-                form.classList.remove('none');
-            }else{
-                form.classList.remove('block');
-                form.classList.add('none');
-                tabela.classList.add('block');
-                tabela.classList.remove('none');
-            }
-        }
-    </script>
+<h1>Professores</h1>
+<table >
+    <tr>
+        <th>Foto</th>
+        <th>Nome</th>
+        <th>Área</th>
+        <th>Perfil</th>
+        <th>email</th>
+        <th>Editar</th>
+        <th>deletar</th>
+    </tr>
+    {% for professor in professores %}
+        <tr>
+            <td><img width="128px" height="128px" src="/img?img_id={{professor.key.urlsafe()}}"></img></td>
+            <td>{{professor.nome}}</td>
+            <td>{{professor.area}}</td>
+            <td>{{professor.perfil}}</td>
+            <td>{{professor.email}}</td>
+            <td><a href="/updateprofessor?key={{professor.key.urlsafe()}}"><button type="button">editar</button></a></td>
+            <td><a href="/deleteprofessor?key={{professor.key.urlsafe()}}"><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></a>
+              </td>
+        </tr>
+    {% endfor %}
+</table>
 
-    <div id="form_professor" class="none">
-        <button class="btn-home" onclick="add_professor(0)">
-            <i class="fa fa-arrow-left"></i>
-        </button>
-        <form action="/professor" enctype="multipart/form-data" method="post">
-
-            <div><label>Nome</label></div>
-            <div><input type="text" name="nome" placeholder="Digite o nome"/></div>
-
-            <hr class="hr-line">
-
-            <div><label>Área</label></div>
-            <div><input type="text" name="area" placeholder="Digite a area"/></div>
-
-            <hr class="hr-line">
-
-            <div><label>Perfil</label></div>
-            <div><input type="text" name="perfil" placeholder="Digite o perfil"/></div>
-
-            <hr class="hr-line">
-
-            <div><label>Email</label></div>
-            <div><input type="text" name="email" placeholder="Digite o email"/></div>
-
-            <hr class="hr-line">
-
-            <div><label>Foto</label></div>
-            <div>
-                <input type="file" name="img" required="true">
-            </div>
-            <div class="padding-top-10 padding-bot-10">
-                <input type="submit" value="Adicionar">
-            </div>
-        </form>
-    </div>
-
-    <div id="tabela" class="block">
-        <div class="padding-bot-10">
-            <a class="btn-home" href="/">
-                <i class="fa fa-home"></i>
-            </a>
-            <button class="btn-home" onclick="add_professor(1)">
-                <i class="fa fa-plus"></i> 
-            </button>
-        </div>
-        <div class="w3-responsive">
-            <table class="w3-table-all">
-                <thead>
-                    <tr>
-                        <th>Foto</th>
-                        <th>Nome</th>
-                        <th>Área</th>
-                        <th>Perfil</th>
-                        <th>Email</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for professor in professores %}
-                    <tr>
-                        <td><img class="img-circle" width="128px" height="128px" src="/img?img_id={{professor.key.urlsafe()}}"></img>
-                        </td>
-                        <td>{{professor.nome}}</td>
-                        <td>{{professor.area}}</td>
-                        <td>{{professor.perfil}}</td>
-                        <td>{{professor.email}}</td>
-                        <td id="campo_editar_deletar">
-                            <a href="/updateprofessor?key={{professor.key.urlsafe()}}"><i class="fa fa-pencil-square-o fa-5x" aria-hidden="true"></i></a>
-                            <a href="/delete?id={{professor.key.urlsafe()}};page=professor"><i class="fa fa-trash-o fa-5x" aria-hidden="true"></i></a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
 
 {% endblock %}

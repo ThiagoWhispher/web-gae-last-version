@@ -1,11 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-<div id="editar_curso" class="container-ext center-page">
-
-    <h1>EDITAR CURSO</h1>
-
     <form action="/updatecurso?key={{curso.key.urlsafe()}}" method="post">
         <div><label>Nome</label></div>
         <div><input name="nome" type="text" value="{{curso.nome}}"></div>
@@ -15,8 +10,7 @@
         <div><input type="radio" name="semestral" value="Sim"/>Sim</div>
         <div><input type="radio" name="semestral" value="Nao" />Não</div>
         
-        <button id="campo_editar_deletar" type="submit">Alterar</button>
+        <button type="submit">Alterar</button>
     </form>
-</div>
 
 {% endblock %}
