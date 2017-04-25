@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring, invalid-name, import-error
+
 import os
 import jinja2
 import webapp2
@@ -37,7 +40,7 @@ class ImageHandler(webapp2.RequestHandler):
 
 class MainHandler(Handler):
     def get(self):
-        self.render("index.html")
+        self.write("Olá Mundo!")
 
 class ProfessorHandler(Handler):
     def get(self):
@@ -74,40 +77,20 @@ class CursoHandler(Handler):
 
 class DisciplinaHandler(Handler):
     def get(self):
-        disciplinas = Disciplina.query()
-        cursos = Curso.query()
-        curso = self.request.get('key')
-        self.render("disciplina.html", disciplinas=disciplinas, cursos=cursos, Curso=Curso, curso=curso)
-
+        key_curso = ndb.Key(urlsafe=self.request.get('key'))
+        disciplinas = Disciplina.query(Disciplina.curso == key_curso)
+        self.render("disciplina.html", disciplinas=disciplinas, key_curso=key_curso)
     def post(self):
-        #a fazer
-        #definir variavel para os ids dos cursos
+        
         nome   = self.request.get("nome")
-        periodo  = self.request.get("periodo")
-        periodo = int(periodo)
-        curso = self.request.get("curso")
-        curso=int(curso)
-
+        periodo  = int(self.request.get("periodo"))
+        key_curso = ndb.Key(urlsafe=self.request.get('key'))
+        curso = key_curso
         disciplina = Disciplina(nome=nome, periodo=periodo, curso=curso)
         disciplina.put()
         time.sleep(.1)
+        self.redirect('/disciplina?key=' + key_curso.urlsafe())
 
-        key = self.request.get("key")
-        self.redirect(key)
-
-class DeleteHandler(webapp2.RequestHandler):
-    def get(self):
-        key = ndb.Key(urlsafe=self.request.get('id'))
-        key.delete()
-        time.sleep(.1)
-        if(self.request.get('page') == 'professor'):
-            self.redirect('/professor')
-        elif(self.request.get('page') == 'curso'):
-            self.redirect('/curso')
-        else:
-            params = {'key': ''}
-            r = requests.get('/disciplina', params=params)
-            self.redirect(r.url)
 
 class UpdateCursoHandler(Handler):
     def get(self):
@@ -123,7 +106,7 @@ class UpdateCursoHandler(Handler):
         curso.semestral = self.request.get('semestral')
         curso.put()
         time.sleep(.1)
-        self.redirect("/curso")
+        self.redirect('/curso')
 
 class UpdateProfessorHandler(Handler):
     def get(self):
@@ -146,8 +129,7 @@ class UpdateDisciplinaHandler(Handler):
     def get(self):
         key = ndb.Key(urlsafe=self.request.get('key'))
         disciplina = key.get()
-        cursos=Curso.query()
-        self.render("editar_disciplina.html", disciplina=disciplina, cursos=cursos)
+        self.render("editar_disciplina.html", disciplina=disciplina)
     
     def post(self):
         key = ndb.Key(urlsafe=self.request.get('key'))
@@ -155,12 +137,31 @@ class UpdateDisciplinaHandler(Handler):
         disciplina.nome   = self.request.get('nome')
         periodo   = self.request.get('periodo')
         disciplina.periodo = int(periodo)
-        curso   = self.request.get('curso')
-        disciplina.curso=int(curso)
         disciplina.put()
         time.sleep(.1)
-        self.redirect("/disciplina")
+        self.redirect("/disciplina?key=" + disciplina.curso.urlsafe())
 
+class DeleteProfessorHandler(webapp2.RequestHandler):
+    def get(self):
+        key = ndb.Key(urlsafe=self.request.get('key'))
+        key.delete()
+        time.sleep(.1)
+        self.redirect('/professor')
+
+class DeleteCursoHandler(webapp2.RequestHandler):
+    def get(self):
+        key = ndb.Key(urlsafe=self.request.get('key'))
+        key.delete()
+        time.sleep(.1)
+        self.redirect('/curso')
+
+class DeleteDisciplinaHandler(webapp2.RequestHandler):
+    def get(self):
+        key = ndb.Key(urlsafe=self.request.get('key'))
+        key_curso = key.get().curso
+        key.delete()
+        time.sleep(.1)
+        self.redirect("/disciplina?key=" + key_curso.urlsafe())
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
@@ -171,5 +172,8 @@ app = webapp2.WSGIApplication([
     ('/updatecurso', UpdateCursoHandler),
     ('/updateprofessor', UpdateProfessorHandler),
     ('/updatedisciplina', UpdateDisciplinaHandler),
-    ('/delete', DeleteHandler)
+    ('/deleteprofessor', DeleteProfessorHandler),
+    ('/deletecurso', DeleteCursoHandler),
+    ('/deletedisciplina', DeleteDisciplinaHandler)
+
 ], debug=True)

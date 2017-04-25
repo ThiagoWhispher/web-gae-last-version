@@ -18,4 +18,4 @@ class Curso(ndb.Model):
 class Disciplina(ndb.Model):
 	nome = ndb.StringProperty(required=True)
 	periodo = ndb.IntegerProperty(required=True)
-	curso = ndb.IntegerProperty(required=True)
+	curso = ndb.KeyProperty(kind=Curso)
